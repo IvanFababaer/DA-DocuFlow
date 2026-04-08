@@ -104,7 +104,7 @@ export default function LetterForm({ userRole = 'Staff' }) {
     setIsAiGenerating(true);
     showToast("AI is drafting your letter...", "success");
     try {
-      const response = await axios.post('http://localhost:2000/api/ai/generate-order', {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/ai/generate-order`, {
         topic: aiPrompt,
         documentType: formData.document_type
       });
@@ -159,7 +159,7 @@ export default function LetterForm({ userRole = 'Staff' }) {
     }
     setIsSendingEmail(true);
     try {
-      await axios.post(`http://localhost:2000/api/documents/${id}/send-email`, {
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/documents/${id}/send-email`, {
         email: emailAddress,
         subject: `Official Letter: ${formData.subject}`,
         documentType: formData.document_type
@@ -229,7 +229,7 @@ export default function LetterForm({ userRole = 'Staff' }) {
       if (status === 'Released') {
          showToast("Finalizing Document & Generating PDF...", "success");
          const autoFileName = generateFileName();
-         await axios.post(`http://localhost:2000/api/documents/${currentDocId}/generate-pdf`, {
+         await axios.post(`${import.meta.env.VITE_API_URL}//api/documents/${currentDocId}/generate-pdf`, {
              fileName: autoFileName
          });
       }

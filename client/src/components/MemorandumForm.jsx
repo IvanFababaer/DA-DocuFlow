@@ -99,7 +99,7 @@ export default function MemorandumForm({ userRole = 'Staff' }) {
     setIsAiGenerating(true);
     showToast("AI is drafting your memorandum...", "success");
     try {
-      const response = await axios.post('http://localhost:2000/api/ai/generate-order', {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}//api/ai/generate-order`, {
         topic: aiPrompt,
         documentType: formData.document_type
       });
@@ -160,7 +160,7 @@ export default function MemorandumForm({ userRole = 'Staff' }) {
     }
     setIsSendingEmail(true);
     try {
-      await axios.post(`http://localhost:2000/api/documents/${id}/send-email`, {
+      await axios.post(`${import.meta.env.VITE_API_URL}//api/documents/${id}/send-email`, {
         email: emailAddress,
         subject: `Official ${formData.document_type}: ${formData.subject}`,
         documentType: formData.document_type
@@ -236,7 +236,7 @@ export default function MemorandumForm({ userRole = 'Staff' }) {
           showToast("Finalizing Document & Generating PDF...", "success");
           const autoFileName = generateFileName();
           
-          await axios.post(`http://localhost:2000/api/documents/${currentDocId}/generate-pdf`, {
+          await axios.post(`${import.meta.env.VITE_API_URL}//api/documents/${currentDocId}/generate-pdf`, {
               fileName: autoFileName,
               signatory_name: formData.signatory_name,
               signatory_title: formData.signatory_title,

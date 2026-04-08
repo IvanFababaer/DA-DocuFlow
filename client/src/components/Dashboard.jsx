@@ -104,7 +104,9 @@ export default function Dashboard({ userRole = 'Staff' }) {
       
       if (newStatus === 'Released') {
         try {
-          const response = await axios.post(`http://localhost:2000/api/documents/${selectedDoc.id}/generate-pdf`);
+          const response = await axios.post(
+          `${import.meta.env.VITE_API_URL}/api/documents/${selectedDoc.id}/generate-pdf`
+        );
           if (!response.data.pdfUrl) showToast("Document released, but PDF generation failed.", "error");
           else showToast("Document officially released and PDF generated!", "success");
         } catch (pdfError) {
@@ -125,7 +127,7 @@ export default function Dashboard({ userRole = 'Staff' }) {
     if (status !== 'Draft' && status !== 'Released') return showToast("You can only delete Drafts or Archived documents.", "error");
     if (!window.confirm("Are you sure you want to delete this document permanently?")) return;
     try {
-      await axios.delete(`http://localhost:2000/api/documents/${id}`);
+      await axios.delete(`${import.meta.env.VITE_API_URL}/api/documents/${id}`);
       showToast("Document deleted successfully.", "success");
       fetchDocuments(true);
     } catch (error) {

@@ -100,10 +100,13 @@ export default function AdminOrderForm({ userRole = 'Staff' }) {
     setIsAiGenerating(true);
     showToast("AI is drafting your document...", "success");
     try {
-      const response = await axios.post('http://localhost:2000/api/ai/generate-order', {
-        topic: aiPrompt,
-        documentType: formData.document_type
-      });
+        const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/ai/generate-order`,
+        {
+          topic: aiPrompt,
+          documentType: formData.document_type
+        }
+  );
       const newContent = formData.body_content 
         ? `${formData.body_content}<br><br>${response.data.htmlContent}`
         : response.data.htmlContent;
@@ -156,7 +159,7 @@ export default function AdminOrderForm({ userRole = 'Staff' }) {
     }
     setIsSendingEmail(true);
     try {
-      await axios.post(`http://localhost:2000/api/documents/${id}/send-email`, {
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/documents/${id}/send-email`, {
         email: emailAddress,
         subject: `Official ${formData.document_type}: ${formData.subject}`,
         documentType: formData.document_type
@@ -228,7 +231,7 @@ export default function AdminOrderForm({ userRole = 'Staff' }) {
          showToast("Finalizing Document...", "success");
          const autoFileName = generateFileName();
          
-         await axios.post(`http://localhost:2000/api/documents/${currentDocId}/generate-pdf`, {
+         await axios.post(`${import.meta.env.VITE_API_URL}/api/documents/${currentDocId}/generate-pdf`, {
              fileName: autoFileName
          });
       }
