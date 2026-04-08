@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    /* Global Office Communication Standards */
+    body {
+      font-family: 'Cambria', serif; /* Standard font */
+      font-size: 11pt; /* Font size 10-12 */
+      line-height: 1.15; /* Line spacing (Body): 1.15 */
+      text-align: justify; /* Body Alignment: Justified */
+      color: black;
+      margin: 0 !important;
+      
+      /* Official Document Margins */
+      padding-left: 1.25in !important; 
+      padding-right: 1in !important; 
+      padding-top: 10px !important; /* Breathing room below header */
+    }
+
+    /* Clean up any empty divs automatically to prevent blank gaps */
+    div:empty { display: none; }
+
+    /* Paragraph Spacing: Double spacing with succeeding paragraph */
+    p { margin-top: 0; margin-bottom: 2em; }
+
+    /* Document Title Format */
+    .doc-title {
+      font-weight: bold; /* Bold Typeface */
+      text-transform: uppercase; /* ALL CAPS */
+      text-align: left; /* STRICTLY Left-aligned */
+      margin-bottom: 0.2em;
+      font-size: 14pt; /* Slightly larger for official emphasis */
+    }
+
+    /* AO Number and Series */
+    .ao-series {
+      font-weight: normal; /* Regular Typeface */
+      text-align: left; /* Left-aligned */
+      line-height: 1.2; 
+      margin-bottom: 2.5em; /* Spacing after series: 2 blank lines */
+    }
+
+    /* --- ADDED: The solid blank line for manual handwriting --- */
+    .blank-line {
+      display: inline-block;
+      width: 30px;
+      border-bottom: 1.5px solid black;
+    }
+
+    /* Subject Line (Upgraded to Grid for perfect colon alignment) */
+    .subject-block { 
+        display: grid; 
+        grid-template-columns: 85px 20px 1fr; /* Spaced perfectly */
+        margin-bottom: 1.15em; 
+        align-items: start; 
+    }
+    .subject-label { font-weight: bold; text-transform: uppercase; } 
+    .subject-colon { font-weight: bold; text-align: center; }
+    .subject-value { font-weight: bold; text-transform: uppercase; text-align: justify; } 
+
+    /* Horizontal Line */
+    hr.ao-divider { 
+      border: 0; 
+      border-top: 2px solid black; /* 2px for a more official look */
+      margin-top: 0.5em; 
+      margin-bottom: 1.5em; /* 1 blank line before starting the memo body */
+    }
+
+    /* Official Table Styling for the Jodit Editor */
+    table { width: 100%; border-collapse: collapse; margin-top: 1em; margin-bottom: 1.5em; }
+    th, td { border: 1px solid black; padding: 8px; text-align: left; vertical-align: top; }
+    th { background-color: #f2f2f2; font-weight: bold; }
+
+    /* Signature Block */
+    .signature-block {
+      margin-top: 3.45em; /* Start three lines spaces below the last sentence */
+      line-height: 1.2; 
+      text-align: left; /* Left-aligned */
+      margin-bottom: 3.5em;
+      page-break-inside: avoid; /* Prevents signature from splitting onto a new blank page */
+    }
+    .signatory-name { font-weight: bold; text-transform: uppercase; } 
+    .signatory-title { font-weight: normal; text-transform: capitalize; }
+
+    /* --- UPDATED: Document Review Initial --- */
+    .reviewer-block {
+      line-height: 1.2; 
+      text-align: left; 
+      font-size: 8pt; /* Font size: 8 */
+      page-break-inside: avoid; /* Prevents initials from splitting onto a new page */
+      margin-top: 3em; 
+    }
+    
+    .reviewer-initials-wrapper {
+      margin-bottom: 2px;
+    }
+
+    .reviewer-initials {
+      text-transform: uppercase;
+      font-weight: bold;
+    }
+
+    /* The actual line next to the name - NOW SHORTENED FOR INITIALS */
+    .reviewer-line {
+      display: inline-block;
+      width: 40px; /* Reduced to 40px just for a quick initial */
+      border-bottom: 1px solid black; /* Creates the underscore line */
+      margin-left: 5px; /* Small space between the name and the line */
+    }
+
+    .reviewer-designation { 
+      font-weight: bold; 
+      text-transform: uppercase; /* All Caps for Designation */
+    }
+  </style>
+</head>
+<body>
+
+  <div class="doc-title">ADMINISTRATIVE ORDER</div>
+  
+  <div class="ao-series">
+    <div>No. <span class="blank-line"></span></div>
+    {{#if series_year}}<div>Series of {{series_year}}</div>{{/if}}
+  </div>
+
+  <div class="subject-block">
+    <div class="subject-label">SUBJECT</div>
+    <div class="subject-colon">:</div>
+    <div class="subject-value">{{subject}}</div>
+  </div>
+  
+  <hr class="ao-divider" />
+
+  <div>
+    {{{body_content}}}
+  </div>
+
+  {{#if execution_date}}<p>Done this {{execution_date}}.</p>{{/if}}
+
+  <div class="signature-block">
+    {{#if signatory_name}}<div class="signatory-name">{{signatory_name}}</div>{{/if}}
+    {{#if signatory_title}}<div class="signatory-title">{{signatory_title}}</div>{{/if}}
+  </div>
+
+  <div class="reviewer-block">
+    <div class="reviewer-initials-wrapper">
+      {{#if reviewer_initials}}<span class="reviewer-initials">{{reviewer_initials}}</span>{{/if}}
+      <span class="reviewer-line"></span>
+    </div>
+    {{#if reviewer_designation}}<div class="reviewer-designation">{{reviewer_designation}}</div>{{/if}}
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    /* --- PAGE MARGINS FOR PDF EXPORT --- */
+    @page {
+        margin-top: 150px;    /* Space reserved for header.png */
+        margin-bottom: 120px; /* Space reserved for footer.png */
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    /* Global Office Communication Standards */
+    body { 
+        font-family: 'Cambria', serif; 
+        font-size: 11pt; 
+        line-height: 1.15; 
+        text-align: justify; 
+        color: black;
+        margin: 0 !important; 
+        /* Official Document Margins: matched to Admin Order */ 
+        padding-left: 1.25in !important; 
+        padding-right: 1in !important; 
+        padding-top: 10px !important; 
+    }
+    
+    /* Clean up any empty divs automatically to prevent blank gaps */
+    div:empty { display: none; }
+
+    p { margin-top: 0; margin-bottom: 2em; }
+    
+    .doc-title { 
+        font-weight: bold; 
+        text-transform: uppercase; /* ALL CAPS */
+        text-align: left; 
+        margin-bottom: 0.2em; 
+        font-size: 14pt; 
+    }
+    
+    .memo-series { 
+        font-weight: normal;
+        text-align: left; 
+        line-height: 1.2; 
+        margin-bottom: 2.5em; 
+    }
+
+    /* --- ADDED: The solid blank line for manual handwriting --- */
+    .blank-line {
+      display: inline-block;
+      width: 30px;
+      border-bottom: 1.5px solid black;
+    }
+    
+    /* Routing Block (TO, SUBJECT, DATE) */
+    .routing-block { 
+        display: grid; 
+        grid-template-columns: 85px 20px 1fr; 
+        row-gap: 1em; 
+        margin-bottom: 0.5em; 
+        align-items: start; 
+    }
+    .routing-label { font-weight: bold; text-transform: uppercase; }
+    .routing-colon { font-weight: bold; text-align: center; }
+    .routing-value { font-weight: bold; text-transform: uppercase; text-align: justify;}
+
+    /* The solid black separating line */
+    hr.memo-divider { 
+        border: 0; 
+        border-top: 2px solid black; 
+        margin-top: 0.5em; 
+        margin-bottom: 2em; 
+    }
+
+    .body-content { margin-bottom: 3.5em; }
+
+    /* Official Table Styling for the Jodit Editor */
+    table { width: 100%; border-collapse: collapse; margin-top: 1em; margin-bottom: 1.5em; }
+    th, td { border: 1px solid black; padding: 8px; text-align: left; vertical-align: top; }
+    th { background-color: #f2f2f2; font-weight: bold; }
+
+    /* Signature Block - Enhanced to match Admin Order exactly */
+    .signature-block { 
+        margin-top: 3.45em; 
+        line-height: 1.2; 
+        text-align: left; 
+        margin-bottom: 3.5em; 
+        page-break-inside: avoid; 
+    }
+    .signatory-name { font-weight: bold; text-transform: uppercase; }
+    .signatory-title { font-weight: normal; text-transform: capitalize; }
+
+    /* --- Document Review Initial Block --- */
+    .reviewer-block {
+      line-height: 1.2; 
+      text-align: left; 
+      font-size: 8pt; 
+      page-break-inside: avoid; 
+      margin-top: 3em; 
+    }
+    
+    .reviewer-initials-wrapper {
+      margin-bottom: 2px;
+    }
+
+    .reviewer-initials {
+      text-transform: uppercase;
+      font-weight: bold;
+    }
+
+    .reviewer-line {
+      display: inline-block;
+      width: 40px; 
+      border-bottom: 1px solid black; 
+      margin-left: 5px; 
+    }
+
+    .reviewer-designation { 
+      font-weight: bold; 
+      text-transform: uppercase; 
+    }
+  </style>
+</head>
+<body>
+
+  <div class="doc-title">MEMORANDUM</div>
+  
+  <div class="memo-series">
+    <div>No. <span class="blank-line"></span></div>
+    {{#if series_year}}<div>Series of {{series_year}}</div>{{/if}}
+  </div>
+
+  <div class="routing-block">
+    <div class="routing-label">TO</div>
+    <div class="routing-colon">:</div>
+    <div class="routing-value">{{recipient_name}}</div>
+    
+    <div class="routing-label">SUBJECT</div>
+    <div class="routing-colon">:</div>
+    <div class="routing-value">{{subject}}</div>
+    
+    <div class="routing-label">DATE</div>
+    <div class="routing-colon">:</div>
+    <div class="routing-value">{{memo_date}}</div>
+  </div>
+
+  <hr class="memo-divider" />
+
+  <div class="body-content">
+    {{{body_content}}}
+  </div>
+
+  <div class="signature-block">
+    {{#if signatory_name}}<div class="signatory-name">{{signatory_name}}</div>{{/if}}
+    {{#if signatory_title}}<div class="signatory-title">{{signatory_title}}</div>{{/if}}
+  </div>
+
+  <div class="reviewer-block">
+    <div class="reviewer-initials-wrapper">
+      {{#if reviewer_initials}}<span class="reviewer-initials">{{reviewer_initials}}</span>{{/if}}
+      <span class="reviewer-line"></span>
+    </div>
+    {{#if reviewer_designation}}<div class="reviewer-designation">{{reviewer_designation}}</div>{{/if}}
+  </div>
+
+</body>
+</html>

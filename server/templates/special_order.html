@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    /* --- PAGE MARGINS FOR PDF EXPORT --- */
+    @page {
+        margin-top: 150px;    /* Space reserved for header.png */
+        margin-bottom: 120px; /* Space reserved for footer.png */
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    body { 
+        font-family: 'Cambria', serif; 
+        font-size: 11pt; 
+        line-height: 1.15; 
+        text-align: justify; 
+        margin: 0; 
+        /* Official Document Margins */
+        padding-left: 1.25in !important; 
+        padding-right: 1in !important; 
+        padding-top: 10px !important; 
+    }
+    
+    p { margin-top: 0; margin-bottom: 2em; }
+    
+    /* Document Title & Series */
+    .doc-title { 
+        font-weight: bold; 
+        text-transform: uppercase; 
+        text-align: left; 
+        margin-bottom: 0.2em; 
+        font-size: 14pt; 
+    }
+    .so-series { 
+        font-weight: normal; 
+        text-align: left; 
+        line-height: 1.2; 
+        margin-bottom: 2.5em; 
+    }
+
+    /* --- ADDED: The solid blank line for manual handwriting --- */
+    .blank-line {
+      display: inline-block;
+      width: 30px;
+      border-bottom: 1.5px solid black;
+    }
+    
+    /* Subject Line */
+    .subject-block { 
+        display: grid; 
+        grid-template-columns: 85px 20px 1fr; 
+        margin-bottom: 1.15em; 
+        align-items: start; 
+    }
+    .subject-label { font-weight: bold; text-transform: uppercase; } 
+    .subject-colon { font-weight: bold; text-align: center; }
+    .subject-value { font-weight: bold; text-transform: uppercase; text-align: justify; } 
+
+    /* Horizontal Line */
+    hr.so-divider { 
+        border: 0; 
+        border-top: 2px solid black; 
+        margin-top: 0.5em; 
+        margin-bottom: 1.5em; 
+    }
+
+    /* --- ADDED SPACE AFTER BODY CONTENT --- */
+    .body-container { 
+        margin-bottom: 4em; 
+        text-align: justify;
+    }
+
+    /* Official Table Styling */
+    table { width: 100%; border-collapse: collapse; margin-top: 1em; margin-bottom: 1.5em; }
+    th, td { border: 1px solid black; padding: 8px; text-align: left; vertical-align: top; }
+    th { background-color: #f2f2f2; font-weight: bold; }
+
+    /* Closing Line & Date */
+    .closing-statement { text-align: left; margin-bottom: 2.3em; }
+    .issue-date { text-align: left; margin-bottom: 3.45em; page-break-inside: avoid; }
+    
+    /* Signature Block */
+    .signature-block { 
+        line-height: 1.2; 
+        text-align: left; 
+        page-break-inside: avoid; 
+    }
+    .signatory-name { font-weight: bold; text-transform: uppercase; }
+    .signatory-title { font-weight: normal; text-transform: capitalize; }
+
+    /* Reviewer Block */
+    .reviewer-block { 
+        margin-top: 3.5em; 
+        line-height: 1.2; 
+        text-align: left; 
+        font-size: 8pt; 
+        page-break-inside: avoid;
+    }
+
+    .reviewer-initials-wrapper { margin-bottom: 2px; }
+    .reviewer-initials { text-transform: uppercase; font-weight: bold; }
+    .reviewer-line {
+      display: inline-block;
+      width: 40px; 
+      border-bottom: 1px solid black; 
+      margin-left: 5px; 
+    }
+    .reviewer-designation { font-weight: bold; text-transform: uppercase; }
+  </style>
+</head>
+<body>
+
+  <div class="doc-title">SPECIAL ORDER</div>
+  
+  <div class="so-series">
+    <div>No. <span class="blank-line"></span></div>
+    {{#if series_year}}<div>Series of {{series_year}}</div>{{/if}}
+  </div>
+
+  <div class="subject-block">
+    <div class="subject-label">SUBJECT</div>
+    <div class="subject-colon">:</div>
+    <div class="subject-value">{{subject}}</div>
+  </div>
+  
+  <hr class="so-divider" />
+
+  <div class="body-container">
+    {{{body_content}}}
+  </div>
+
+  {{#if closing_statement}}<div class="closing-statement">{{closing_statement}}</div>{{/if}}
+  {{#if issue_date}}<div class="issue-date">Issued this {{issue_date}}.</div>{{/if}}
+
+  <div class="signature-block">
+    {{#if signatory_name}}<div class="signatory-name">{{signatory_name}}</div>{{/if}}
+    {{#if signatory_title}}<div class="signatory-title">{{signatory_title}}</div>{{/if}}
+  </div>
+
+  <div class="reviewer-block">
+    <div class="reviewer-initials-wrapper">
+      <span class="reviewer-initials">
+        {{#if reviewer_action}}{{reviewer_action}}: {{/if}}
+        {{reviewer_initials}}
+      </span>
+      <span class="reviewer-line"></span>
+    </div>
+    {{#if reviewer_designation}}<div class="reviewer-designation">{{reviewer_designation}}</div>{{/if}}
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,25 @@
+/* LIVE PREVIEW FIX: Restore List Numbers, Bullets, and Justification */
+.preview-content {
+    text-align: justify;
+    text-justify: inter-word;
+}
+
+/* Restore Ordered Lists (Numbers) */
+.preview-content ol {
+    list-style-type: decimal !important;
+    padding-left: 2rem !important;
+    margin-bottom: 1rem !important;
+}
+
+/* Restore Unordered Lists (Bullets) */
+.preview-content ul {
+    list-style-type: disc !important;
+    padding-left: 2rem !important;
+    margin-bottom: 1rem !important;
+}
+
+/* Ensure list items space out nicely */
+.preview-content li {
+    margin-bottom: 0.5rem;
+    display: list-item !important; 
+}

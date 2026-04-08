@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    /* --- PAGE MARGINS FOR PDF EXPORT --- */
+    /* This ensures the text starts BELOW your header image and ends ABOVE the footer */
+    @page {
+        margin-top: 150px;    /* Space reserved for header.png */
+        margin-bottom: 120px; /* Space reserved for footer.png */
+        margin-left: 0;       /* Keep 0 so header spans edge-to-edge */
+        margin-right: 0;      /* Keep 0 so header spans edge-to-edge */
+    }
+
+    /* Global Office Communication Standards */
+    body { 
+        font-family: 'Cambria', serif; 
+        font-size: 11pt; 
+        line-height: 1.15; 
+        text-align: justify; 
+        margin: 0; 
+        /* Official Document Margins */
+        padding-left: 1.25in; 
+        padding-right: 1in; 
+        padding-top: 10px; 
+    }
+    
+    p { margin-top: 0; margin-bottom: 2em; }
+    
+    /* Clean up any empty divs automatically */
+    div:empty { display: none; }
+
+    /* Date Line */
+    .date-line { margin-bottom: 2.3em; text-align: left; }
+    
+    /* Inside Address */
+    .inside-address { line-height: 1.2; margin-bottom: 2.3em; text-align: left; }
+    .addressee-name { font-weight: bold; text-transform: uppercase; }
+
+    /* Thru Line (Upgraded to match Live Preview flex layout)  */
+    .thru-line { 
+        display: flex; 
+        gap: 15px; 
+        line-height: 1.2; 
+        margin-bottom: 2.3em; 
+        text-align: left; 
+    }
+    .thru-label { font-weight: bold; text-transform: uppercase; width: 60px; }
+    .thru-details { font-weight: normal; }
+    .thru-name { font-weight: bold; }
+
+    /* Salutation */
+    .salutation { margin-bottom: 1.15em; text-align: left; }
+
+    /* Official Table Styling */
+    table { width: 100%; border-collapse: collapse; margin-top: 1em; margin-bottom: 1.5em; }
+    th, td { border: 1px solid black; padding: 8px; text-align: left; vertical-align: top; }
+    th { background-color: #f2f2f2; font-weight: bold; }
+
+    /* Complimentary Close */
+    .complimentary-close { margin-top: 2.3em; margin-bottom: 3.45em; text-align: left; page-break-inside: avoid; }
+
+    /* Signature Block */
+    .signature-block { 
+        line-height: 1.2; 
+        text-align: left; 
+        margin-bottom: 2.3em; 
+        page-break-inside: avoid; 
+    }
+    .signatory-name { font-weight: bold; text-transform: uppercase; }
+    .signatory-title { text-transform: capitalize; }
+
+    /* Enclosure (Optional)  */
+    .enclosure { margin-top: 2.3em; text-align: left; font-style: italic; page-break-inside: avoid; }
+
+    /* --- UPDATED: Reviewer Block --- */
+    .reviewer-block { 
+        margin-top: 3.45em; 
+        line-height: 1.2; 
+        text-align: left; 
+        font-size: 8pt; 
+        page-break-inside: avoid; 
+    }
+
+    .reviewer-initials-wrapper {
+      margin-bottom: 2px;
+    }
+
+    .reviewer-initials {
+      text-transform: uppercase;
+      font-weight: bold;
+    }
+
+    /* Shortened line right next to the initials */
+    .reviewer-line {
+      display: inline-block;
+      width: 40px; 
+      border-bottom: 1px solid black; 
+      margin-left: 5px; 
+    }
+
+    .reviewer-designation { font-weight: bold; text-transform: uppercase; }
+  </style>
+</head>
+<body>
+
+  <div class="date-line">{{date_line}}</div>
+
+  <div class="inside-address">
+    {{#if addressee_name}}<div class="addressee-name">{{addressee_name}}</div>{{/if}}
+    {{#if addressee_title}}<div>{{addressee_title}}</div>{{/if}}
+    {{#if addressee_office}}<div>{{addressee_office}}</div>{{/if}}
+    {{#if addressee_location}}<div>{{addressee_location}}</div>{{/if}}
+  </div>
+
+  {{#if thru_name}}
+  <div class="thru-line">
+    <div class="thru-label">THRU :</div>
+    <div class="thru-details">
+        <div class="thru-name">{{thru_name}}</div>
+        {{#if thru_title}}<div>{{thru_title}}</div>{{/if}}
+        {{#if thru_office}}<div>{{thru_office}}</div>{{/if}}
+    </div>
+  </div>
+  {{/if}}
+
+  <div class="salutation">Dear {{salutation_name}}:</div>
+
+  <div>
+    {{{body_content}}}
+  </div>
+
+  <div class="complimentary-close">{{complimentary_close}},</div>
+
+  <div class="signature-block">
+    <div class="signatory-name">{{signatory_name}}</div>
+    {{#if signatory_title}}<div class="signatory-title">{{signatory_title}}</div>{{/if}}
+  </div>
+
+  {{#if enclosure_text}}
+  <div class="enclosure">Enclosure: {{enclosure_text}}</div>
+  {{/if}}
+
+  <div class="reviewer-block">
+    <div class="reviewer-initials-wrapper">
+      {{#if reviewer_initials}}<span class="reviewer-initials">{{reviewer_initials}}</span>{{/if}}
+      <span class="reviewer-line"></span>
+    </div>
+    {{#if reviewer_designation}}<div class="reviewer-designation">{{reviewer_designation}}</div>{{/if}}
+  </div>
+
+</body>
+</html>
