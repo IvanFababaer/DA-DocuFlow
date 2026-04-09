@@ -52,7 +52,7 @@ app.post('/api/ai/generate-order', async (req, res) => {
     // 2. Configure the Gemini Model
     // We use gemini-2.5-flash as it is fast, cost-effective, and great for text formatting
     const model = genAI.getGenerativeModel({
-      model: "gemini-2.5-flash",
+      model: "gemini-1.5-flash",
       systemInstruction: "You are a helpful HTML formatting assistant for official government documents.",
     });
 
