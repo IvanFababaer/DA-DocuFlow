@@ -3,7 +3,6 @@ const handlebars = require('handlebars');
 const fs = require('fs');
 const path = require('path');
 const supabase = require('../config/supabase');
-const nodemailer = require('nodemailer');
 const axios = require('axios');
 
 const generateDocument = async (req, res) => {
@@ -40,14 +39,10 @@ const generateDocument = async (req, res) => {
             throw new Error("Document not found in the database.");
         }
 
-        // 4. Select Template
+        // 4. Select Template (Dynamically generated, no longer hardcoded)
         const docType = docData.document_type || 'Administrative Order';
-        let templateFileName = 'administrative_order.html';
+        const templateFileName = `${docType.toLowerCase().replace(/\s+/g, '_')}.html`;
         
-        if (docType === 'Special Order') templateFileName = 'special_order.html';
-        else if (docType === 'Memorandum') templateFileName = 'memorandum.html'; 
-        else if (docType === 'Letter') templateFileName = 'letter.html'; 
-
         const templatePath = path.join(__dirname, `../templates/${templateFileName}`);
         
         let htmlTemplate = '';
@@ -207,61 +202,4 @@ const deleteDocument = async (req, res) => {
     }
 };
 
-const sendEmail = async (req, res) => {
-    const { id } = req.params;
-    const { email, cc, subject, documentType } = req.body;
-
-    try {
-        const { data: docData, error: dbError } = await supabase
-            .from('official_documents')
-            .select('pdf_url')
-            .eq('id', id)
-            .single();
-
-        if (dbError || !docData || !docData.pdf_url) {
-            return res.status(404).json({ error: 'PDF not found. Finalize document first.' });
-        }
-
-        const pdfResponse = await axios.get(docData.pdf_url, { responseType: 'arraybuffer' });
-        const pdfBuffer = Buffer.from(pdfResponse.data, 'binary');
-
-        const transporter = nodemailer.createTransport({
-            service: 'gmail',
-            auth: {
-                user: process.env.EMAIL_USER, 
-                pass: process.env.EMAIL_PASS     
-            }
-        });
-
-        const mailOptions = {
-            from: `"DA-MIMAROPA DocuFlow" <${process.env.EMAIL_USER}>`,
-            to: email,
-            cc: cc || '', 
-            subject: subject || `Official Document: ${documentType}`,
-            text: `Good day,\n\nPlease find the attached ${documentType}.\n\nThis is an automated dispatch from DocuFlow.`,
-            attachments: [{ filename: `${documentType}_${Date.now()}.pdf`, content: pdfBuffer }]
-        };
-
-        await transporter.sendMail(mailOptions);
-        
-        // RESTORED LOG ENTRY
-        const logEntry = {
-            document_id: id,
-            recipient_email: email,
-            subject: subject || `Official Document: ${documentType}`,
-            document_type: documentType,
-            sent_at: new Date().toISOString()
-        };
-
-        const { error: logError } = await supabase.from('communication_logs').insert([logEntry]);
-        if (logError) console.error("Logged email internally, but DB insert failed:", logError);
-
-        res.status(200).json({ success: true, message: 'Email sent and logged.' });
-
-    } catch (error) {
-        console.error('Email Dispatch Error:', error);
-        res.status(500).json({ success: false, error: 'Failed to dispatch email' });
-    }
-};
-
-module.exports = { generateDocument, getDocuments, deleteDocument, sendEmail };
+module.exports = { generateDocument, getDocuments, deleteDocument };

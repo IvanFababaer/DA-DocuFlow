@@ -5,8 +5,7 @@ const router = express.Router();
 const { 
   getDocuments, 
   deleteDocument, 
-  generateDocument,
-  sendEmail // <--- We must import the new email function here!
+  generateDocument
 } = require('../controllers/documentController'); 
 
 // GET all documents: http://localhost:2000/api/documents
@@ -18,8 +17,6 @@ router.delete('/:id', deleteDocument);
 // GENERATE PDF: http://localhost:2000/api/documents/:id/generate-pdf
 router.post('/:id/generate-pdf', generateDocument);
 
-// --- NEW: SEND EMAIL ---
-// SEND EMAIL: http://localhost:2000/api/documents/:id/send-email
-router.post('/:id/send-email', sendEmail); // <--- This is the missing link!
+
 
 module.exports = router;
