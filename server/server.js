@@ -29,12 +29,18 @@ app.use('/api/documents', documentRoutes);
 app.post('/api/ai/generate-order', async (req, res) => {
   const { topic, documentType } = req.body;
 
+  // PRE-CHECK: Did you forget to add the API key or restart the server?
+  if (!process.env.GEMINI_API_KEY) {
+      return res.status(500).json({ 
+          error: "CRITICAL: The GEMINI_API_KEY is missing from your backend .env file, or you forgot to restart your server!" 
+      });
+  }
+
   if (!topic) {
     return res.status(400).json({ error: "Topic is required" });
   }
 
   try {
-    // 1. Construct the strict prompt for the AI
     const systemPrompt = `
       Act as an expert administrative drafter for a government agency. 
       Write the body section of a ${documentType || 'Administrative Document'} about: "${topic}". 
@@ -46,30 +52,28 @@ app.post('/api/ai/generate-order', async (req, res) => {
       - Keep the tone formal, objective, and authoritative.
     `;
 
-    // 2. Configure the Gemini Model
     const model = genAI.getGenerativeModel({
-      model: "gemini-2.5-flash",
+      model: "gemini-2.0-flash", 
       systemInstruction: "You are a helpful HTML formatting assistant for official government documents.",
     });
 
-    // 3. Call the Gemini API
     const result = await model.generateContent({
       contents: [{ role: "user", parts: [{ text: systemPrompt }] }],
       generationConfig: {
-        temperature: 0.3, // Keep it low for formal, predictable text
+        temperature: 0.3, 
       }
     });
 
-    // 4. Clean up the response (AI sometimes wraps HTML in markdown blocks like ```html)
     let generatedHtml = result.response.text();
     generatedHtml = generatedHtml.replace(/```html/gi, '').replace(/```/g, '').trim();
 
-    // 5. Send the HTML back to the React frontend
     res.status(200).json({ htmlContent: generatedHtml });
 
   } catch (error) {
     console.error("AI Generation Error:", error);
-    res.status(500).json({ error: "Failed to generate AI content. Check server logs." });
+    
+    // THIS IS THE MAGIC LINE! It sends the REAL error to your frontend.
+    res.status(500).json({ error: error.message });
   }
 });
 
@@ -78,7 +82,6 @@ app.post('/api/ai/generate-order', async (req, res) => {
 // ---------------------------------------------------------
 app.get('/api/status', async (req, res) => {
     try {
-        // Test connection by fetching the row count of your table
         const { data, error, count } = await supabase
             .from('official_documents')
             .select('*', { count: 'exact', head: true });
@@ -98,5 +101,4 @@ app.get('/api/status', async (req, res) => {
 const PORT = process.env.PORT || 2000;
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
-    console.log(`Test your connection at http://localhost:${PORT}/api/status`);
 });

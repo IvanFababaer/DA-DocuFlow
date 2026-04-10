@@ -208,7 +208,7 @@ export default function LetterForm({ userRole = 'Staff' }) {
       if (status === 'Released') {
          showToast("Finalizing Document & Generating PDF...", "success");
          const autoFileName = generateFileName();
-         await axios.post(`${import.meta.env.VITE_API_URL}//api/documents/${currentDocId}/generate-pdf`, {
+         await axios.post(`${import.meta.env.VITE_API_URL}/api/documents/${currentDocId}/generate-pdf`, {
              fileName: autoFileName
          });
       }
