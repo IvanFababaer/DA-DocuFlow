@@ -15,11 +15,6 @@ export default function LetterForm({ userRole = 'Staff' }) {
   // GLOBAL ROUTING TOGGLE (Fetched from Supabase agency_settings)
   const [isRoutingEnabled, setIsRoutingEnabled] = useState(false);
 
-  // Email States
-  const [showEmailInput, setShowEmailInput] = useState(false);
-  const [emailAddress, setEmailAddress] = useState('');
-  const [isSendingEmail, setIsSendingEmail] = useState(false);
-
   // AI Generation States
   const [aiPrompt, setAiPrompt] = useState('');
   const [isAiGenerating, setIsAiGenerating] = useState(false);
@@ -104,10 +99,16 @@ export default function LetterForm({ userRole = 'Staff' }) {
     setIsAiGenerating(true);
     showToast("AI is drafting your letter...", "success");
     try {
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/ai/generate-order`, {
-        topic: aiPrompt,
-        documentType: formData.document_type
-      });
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/ai/generate-order`, 
+        {
+          topic: aiPrompt,
+          documentType: formData.document_type
+        },
+        {
+          timeout: 100000 // Instructs Axios to wait up to 100 seconds
+        }
+      );
       const newContent = formData.body_content 
         ? `${formData.body_content}<br><br>${response.data.htmlContent}`
         : response.data.htmlContent;
@@ -152,35 +153,13 @@ export default function LetterForm({ userRole = 'Staff' }) {
     }
   };
 
-  const handleSendEmail = async () => {
-    if (!emailAddress) {
-      showToast("Please enter an email address.", "error");
-      return;
-    }
-    setIsSendingEmail(true);
-    try {
-      await axios.post(`${import.meta.env.VITE_API_URL}/api/documents/${id}/send-email`, {
-        email: emailAddress,
-        subject: `Official Letter: ${formData.subject}`,
-        documentType: formData.document_type
-      });
-      showToast("Email sent successfully!", "success");
-      setShowEmailInput(false);
-      setEmailAddress('');
-    } catch (error) {
-      showToast("Failed to send email.", "error");
-    } finally {
-      setIsSendingEmail(false);
-    }
-  };
-
   const generateFileName = () => {
     const type = formData.document_type.replace(/\s+/g, '_');
     const safeSubject = (formData.subject || 'Untitled_Letter')
       .replace(/[^a-zA-Z0-9 ]/g, '') 
       .trim()
       .split(' ')
-      .slice(0, 4)                   
+      .slice(0, 4)                  
       .join('_');
     const datePart = formData.date_line.replace(/\s+/g, '_') || new Date().getFullYear();
     return `${type}_${datePart}_${safeSubject}.pdf`;
@@ -286,14 +265,7 @@ export default function LetterForm({ userRole = 'Staff' }) {
                 <div className="flex flex-wrap gap-2">
                   <button onClick={handlePrint} className="flex-1 bg-gray-900 text-white font-black py-3 rounded-xl shadow-lg uppercase tracking-widest text-[9px] hover:bg-black transition-colors flex justify-center items-center gap-2">Print</button>
                   <button onClick={handleDownload} className="flex-1 bg-emerald-600 text-white font-black py-3 rounded-xl shadow-lg uppercase tracking-widest text-[9px] hover:bg-emerald-700 transition-colors flex justify-center items-center gap-2">Download</button>
-                  <button onClick={() => setShowEmailInput(!showEmailInput)} className="flex-1 bg-amber-500 text-white font-black py-3 rounded-xl shadow-lg uppercase tracking-widest text-[9px] hover:bg-amber-600 transition-colors flex justify-center items-center gap-2">Email File</button>
                 </div>
-                {showEmailInput && (
-                  <div className="bg-amber-50 p-4 rounded-xl border border-amber-200 flex flex-col gap-3 animate-fadeIn mt-2">
-                    <input type="email" value={emailAddress} onChange={(e) => setEmailAddress(e.target.value)} placeholder="email@example.com" className="flex-1 bg-white border border-amber-200 rounded-lg p-2.5 text-xs outline-none" />
-                    <button onClick={handleSendEmail} disabled={isSendingEmail} className="bg-amber-600 text-white px-4 py-2 rounded-lg font-black uppercase text-[9px] tracking-widest hover:bg-amber-700 transition-colors">Send</button>
-                  </div>
-                )}
                 <button onClick={() => navigate('/')} className="w-full bg-gray-100 text-gray-600 font-bold py-3 rounded-xl text-[10px] uppercase tracking-widest hover:bg-gray-200 transition-colors">Back to Dashboard</button>
               </div>
             </div>
@@ -335,7 +307,6 @@ export default function LetterForm({ userRole = 'Staff' }) {
                   </button>
                 </div>
 
-                {/* --- RESTORED STREAMLINED AI BOX --- */}
                 {showAiBox && (
                   <div className="bg-gradient-to-r from-indigo-50 to-purple-50 p-4 rounded-xl border border-indigo-100 flex flex-col gap-3 animate-fadeIn mb-4">
                     <p className="text-[10px] font-black text-indigo-800 uppercase tracking-widest mb-2">AI Drafting Assistant</p>

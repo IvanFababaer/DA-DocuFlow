@@ -14,11 +14,6 @@ export default function AdminOrderForm({ userRole = 'Staff' }) {
   // GLOBAL ROUTING TOGGLE (Fetched from Supabase)
   const [isRoutingEnabled, setIsRoutingEnabled] = useState(false);
 
-  // Email States
-  const [showEmailInput, setShowEmailInput] = useState(false);
-  const [emailAddress, setEmailAddress] = useState('');
-  const [isSendingEmail, setIsSendingEmail] = useState(false);
-
   // AI Generation States
   const [aiPrompt, setAiPrompt] = useState('');
   const [isAiGenerating, setIsAiGenerating] = useState(false);
@@ -105,8 +100,11 @@ export default function AdminOrderForm({ userRole = 'Staff' }) {
         {
           topic: aiPrompt,
           documentType: formData.document_type
+        },
+        {
+          timeout: 100000 // Instructs Axios to wait up to 100 seconds
         }
-  );
+      );
       const newContent = formData.body_content 
         ? `${formData.body_content}<br><br>${response.data.htmlContent}`
         : response.data.htmlContent;
@@ -152,28 +150,6 @@ export default function AdminOrderForm({ userRole = 'Staff' }) {
     }
   };
 
-  const handleSendEmail = async () => {
-    if (!emailAddress) {
-      showToast("Please enter an email address.", "error");
-      return;
-    }
-    setIsSendingEmail(true);
-    try {
-      await axios.post(`${import.meta.env.VITE_API_URL}/api/documents/${id}/send-email`, {
-        email: emailAddress,
-        subject: `Official ${formData.document_type}: ${formData.subject}`,
-        documentType: formData.document_type
-      });
-      showToast("Email sent successfully!", "success");
-      setShowEmailInput(false);
-      setEmailAddress('');
-    } catch (error) {
-      showToast("Failed to send email. Check backend.", "error");
-    } finally {
-      setIsSendingEmail(false);
-    }
-  };
-
   // --- AUTO FILE NAMING LOGIC ---
   const generateFileName = () => {
     const type = formData.document_type.replace(/\s+/g, '_');
@@ -182,7 +158,7 @@ export default function AdminOrderForm({ userRole = 'Staff' }) {
       .replace(/[^a-zA-Z0-9 ]/g, '') 
       .trim()
       .split(' ')
-      .slice(0, 4)                   
+      .slice(0, 4)                  
       .join('_');
     return `${type}_No-${docNum}_s${formData.series_year}_${safeSubject}.pdf`;
   };
@@ -289,15 +265,7 @@ export default function AdminOrderForm({ userRole = 'Staff' }) {
                 <div className="flex flex-wrap gap-2">
                   <button onClick={handlePrint} className="flex-1 bg-gray-900 text-white font-black py-4 rounded-xl shadow-lg flex justify-center items-center gap-2 uppercase tracking-widest text-[9px] hover:bg-black transition-colors">Print File</button>
                   <button onClick={handleDownload} className="flex-1 bg-green-600 text-white font-black py-4 rounded-xl shadow-lg flex justify-center items-center gap-2 uppercase tracking-widest text-[9px] hover:bg-green-700 transition-colors">Download PDF</button>
-                  <button onClick={() => setShowEmailInput(!showEmailInput)} className="flex-1 bg-amber-500 text-white font-black py-4 rounded-xl shadow-lg flex justify-center items-center gap-2 uppercase tracking-widest text-[9px] hover:bg-amber-600 transition-colors">Email File</button>
                 </div>
-
-                {showEmailInput && (
-                  <div className="bg-amber-50 p-4 rounded-xl border border-amber-200 flex flex-col gap-3 animate-fadeIn mt-2">
-                    <input type="email" value={emailAddress} onChange={(e) => setEmailAddress(e.target.value)} placeholder="email@example.com" className="flex-1 bg-white border border-amber-200 rounded-lg p-2.5 text-xs outline-none focus:ring-2 focus:ring-amber-500 transition-all" />
-                    <button onClick={handleSendEmail} disabled={isSendingEmail} className="bg-amber-600 text-white px-4 py-2 rounded-lg font-black uppercase text-[9px] tracking-widest hover:bg-amber-700">Send</button>
-                  </div>
-                )}
                 <button onClick={() => navigate('/')} className="w-full bg-gray-100 text-gray-600 font-bold py-3 rounded-xl text-[10px] uppercase tracking-widest hover:bg-gray-200 transition-colors">Back to Dashboard</button>
               </div>
             </div>

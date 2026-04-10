@@ -13,10 +13,6 @@ export default function MemorandumForm({ userRole = 'Staff' }) {
 
   const [isRoutingEnabled, setIsRoutingEnabled] = useState(false);
 
-  const [showEmailInput, setShowEmailInput] = useState(false);
-  const [emailAddress, setEmailAddress] = useState('');
-  const [isSendingEmail, setIsSendingEmail] = useState(false);
-
   const [aiPrompt, setAiPrompt] = useState('');
   const [isAiGenerating, setIsAiGenerating] = useState(false);
   const [showAiBox, setShowAiBox] = useState(false);
@@ -99,10 +95,16 @@ export default function MemorandumForm({ userRole = 'Staff' }) {
     setIsAiGenerating(true);
     showToast("AI is drafting your memorandum...", "success");
     try {
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}//api/ai/generate-order`, {
-        topic: aiPrompt,
-        documentType: formData.document_type
-      });
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/ai/generate-order`, 
+        {
+          topic: aiPrompt,
+          documentType: formData.document_type
+        },
+        {
+          timeout: 100000 // Instructs Axios to wait up to 100 seconds
+        }
+      );
       
       if (response.data && response.data.htmlContent) {
         const newContent = formData.body_content 
@@ -150,28 +152,6 @@ export default function MemorandumForm({ userRole = 'Staff' }) {
       };
     } catch (error) {
       window.open(formData.pdf_url, '_blank'); 
-    }
-  };
-
-  const handleSendEmail = async () => {
-    if (!emailAddress) {
-      showToast("Please enter an email address.", "error");
-      return;
-    }
-    setIsSendingEmail(true);
-    try {
-      await axios.post(`${import.meta.env.VITE_API_URL}//api/documents/${id}/send-email`, {
-        email: emailAddress,
-        subject: `Official ${formData.document_type}: ${formData.subject}`,
-        documentType: formData.document_type
-      });
-      showToast("Email sent successfully!", "success");
-      setShowEmailInput(false);
-      setEmailAddress('');
-    } catch (error) {
-      showToast("Failed to send email.", "error");
-    } finally {
-      setIsSendingEmail(false);
     }
   };
 
@@ -236,7 +216,7 @@ export default function MemorandumForm({ userRole = 'Staff' }) {
           showToast("Finalizing Document & Generating PDF...", "success");
           const autoFileName = generateFileName();
           
-          await axios.post(`${import.meta.env.VITE_API_URL}//api/documents/${currentDocId}/generate-pdf`, {
+          await axios.post(`${import.meta.env.VITE_API_URL}/api/documents/${currentDocId}/generate-pdf`, {
               fileName: autoFileName,
               signatory_name: formData.signatory_name,
               signatory_title: formData.signatory_title,
@@ -298,15 +278,7 @@ export default function MemorandumForm({ userRole = 'Staff' }) {
                 <div className="flex flex-wrap gap-2">
                   <button onClick={handlePrint} className="flex-1 bg-gray-900 text-white font-black py-3 rounded-xl shadow-lg flex justify-center items-center gap-2 uppercase tracking-widest text-[9px] hover:bg-black transition-colors">Print</button>
                   <button onClick={handleDownload} className="flex-1 bg-blue-600 text-white font-black py-3 rounded-xl shadow-lg flex justify-center items-center gap-2 uppercase tracking-widest text-[9px] hover:bg-blue-700 transition-colors">Download</button>
-                  <button onClick={() => setShowEmailInput(!showEmailInput)} className="flex-1 bg-amber-500 text-white font-black py-3 rounded-xl shadow-lg flex justify-center items-center gap-2 uppercase tracking-widest text-[9px] hover:bg-amber-600 transition-colors">Email File</button>
                 </div>
-
-                {showEmailInput && (
-                  <div className="bg-amber-50 p-4 rounded-xl border border-amber-200 flex flex-col gap-3 animate-fadeIn mt-2">
-                    <input type="email" value={emailAddress} onChange={(e) => setEmailAddress(e.target.value)} placeholder="email@example.com" className="flex-1 bg-white border border-amber-200 rounded-lg p-2.5 text-xs focus:ring-2 focus:ring-amber-500 outline-none transition-all" />
-                    <button onClick={handleSendEmail} disabled={isSendingEmail} className="bg-amber-600 text-white px-4 py-2 rounded-lg font-black uppercase text-[9px] tracking-widest hover:bg-amber-700 transition-colors">Send</button>
-                  </div>
-                )}
                 <button onClick={() => navigate('/')} className="w-full bg-gray-100 text-gray-600 font-bold py-3 rounded-xl text-[10px] uppercase tracking-widest hover:bg-gray-200 transition-colors">Back to Dashboard</button>
               </div>
             </div>

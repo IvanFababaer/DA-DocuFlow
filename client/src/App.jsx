@@ -8,7 +8,6 @@ import AdminOrderForm from './components/AdminOrderForm';
 import SpecialOrderForm from './components/SpecialOrderForm';
 import MemorandumForm from './components/MemorandumForm';
 import LetterForm from './components/LetterForm';
-import SentEmails from './components/SentEmails';
 
 // --- THE FIX IS RIGHT HERE: Pointing to the components folder! ---
 import Settings from './components/Settings'; 
@@ -120,21 +119,6 @@ function Sidebar({ session, isOpen, setIsOpen, userRole }) {
                 <Link to="/create-letter" onClick={() => window.innerWidth < 1024 && setIsOpen(false)} className={getLinkClass('/create-letter')}>
                   <svg className={getIconClass('/create-letter')} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
                   Official Letter
-                </Link>
-              </div>
-            </>
-          )}
-
-          {/* Director Communications */}
-          {userRole === 'Director' && (
-            <>
-              <div className="px-5 pb-2 mt-6">
-                <p className="text-[10px] text-gray-400 uppercase tracking-widest font-black">Communications</p>
-              </div>
-              <div className="space-y-1">
-                <Link to="/sent-emails" onClick={() => window.innerWidth < 1024 && setIsOpen(false)} className={getLinkClass('/sent-emails')}>
-                  <svg className={getIconClass('/sent-emails')} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
-                  Sent Emails
                 </Link>
               </div>
             </>
@@ -272,28 +256,6 @@ function App() {
                           <Route path="/settings" element={<Settings />} />
                         </>
                       )}
-
-                      {/* --- DIRECTOR'S SENT EMAILS PLACEHOLDER ROUTE --- */}
-                      {userRole === 'Director' && (
-                        <Route path="/sent-emails" element={
-                          <div className="animate-fadeIn relative text-gray-900">
-                            <div className="mb-8 flex flex-col md:flex-row justify-between items-start md:items-end gap-4 border-b border-gray-200 pb-5">
-                              <div>
-                                <h2 className="text-3xl md:text-4xl font-black tracking-tight">Sent Emails</h2>
-                                <p className="text-gray-500 font-medium text-sm mt-2">View the history of all securely dispatched documents.</p>
-                              </div>
-                            </div>
-                            <div className="bg-white rounded-[2rem] border border-gray-100 shadow-xl shadow-gray-200/40 p-20 text-center flex flex-col items-center justify-center">
-                              <div className="w-20 h-20 bg-amber-50 rounded-full flex items-center justify-center border border-amber-100 mb-4">
-                                <svg className="w-10 h-10 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
-                              </div>
-                              <h3 className="text-lg font-black text-gray-900 mb-1">Email Module</h3>
-                              <p className="text-sm text-gray-500 font-medium max-w-md">Import your new SentEmails component here to view dispatch history.</p>
-                            </div>
-                          </div>
-                        } />
-                      )}
-
                     </Routes>
                   </div>
                 </main>
