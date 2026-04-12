@@ -21,7 +21,7 @@ export default function Sidebar({ userRole = 'Staff', onLogout }) {
         <div className="flex items-center gap-4">
           {/* Replaced the styled SVG container with a logo image */}
           <img 
-            src="/path/to/your/logo.png" // Replace with your actual logo image path
+            src="/path/to/your/DA.png" // Replace with your actual logo image path
             alt="DocuFlow DA MIMAROPA Logo" 
             className="w-11 h-11 rounded-xl object-contain shadow-[0_0_15px_rgba(250,204,21,0.4)] border border-yellow-300" 
           />
