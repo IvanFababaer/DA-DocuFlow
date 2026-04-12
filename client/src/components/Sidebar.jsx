@@ -19,10 +19,12 @@ export default function Sidebar({ userRole = 'Staff', onLogout }) {
       {/* BRANDING / LOGO AREA */}
       <div className="h-24 flex items-center px-8 border-b border-gray-100 relative z-10">
         <div className="flex items-center gap-4">
-          {/* Matches the Yellow/Green Hero Logo from the Login Screen */}
-          <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-yellow-400 to-yellow-500 flex items-center justify-center shadow-[0_0_15px_rgba(250,204,21,0.4)] border border-yellow-300">
-            <svg className="w-6 h-6 text-green-950" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
-          </div>
+          {/* Replaced the styled SVG container with a logo image */}
+          <img 
+            src="/path/to/your/logo.png" // Replace with your actual logo image path
+            alt="DocuFlow DA MIMAROPA Logo" 
+            className="w-11 h-11 rounded-xl object-contain shadow-[0_0_15px_rgba(250,204,21,0.4)] border border-yellow-300" 
+          />
           <div>
             <h1 className="font-black text-gray-900 tracking-tight leading-tight text-xl">DocuFlow</h1>
             <p className="text-[10px] font-bold text-green-700 uppercase tracking-widest">DA MIMAROPA</p>
