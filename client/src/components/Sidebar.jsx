@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 
 // 1. IMPORT THE LOGO HERE 
 // Note: Ensure DA.png is inside your src/assets/ folder, or adjust the path.
-import DALogo from '../assets/DA.png'; 
+import DALogo from '../public/DA.png'; 
 
 export default function Sidebar({ userRole = 'Staff', onLogout }) {
   const location = useLocation();
