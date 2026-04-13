@@ -1,4 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
+// IMPORTANT: Adjust this path to point to where your image actually is!
+// For example: '../assets/DA.png' or './images/DA.png'
+import logoImage from './public/DA.png'; 
 
 export default function Sidebar({ userRole = 'Staff', onLogout }) {
   const location = useLocation();
@@ -19,9 +22,9 @@ export default function Sidebar({ userRole = 'Staff', onLogout }) {
       {/* BRANDING / LOGO AREA */}
       <div className="h-24 flex items-center px-8 border-b border-gray-100 relative z-10">
         <div className="flex items-center gap-4">
-          {/* Replaced the styled SVG container with a logo image */}
+          {/* Logo image using the imported variable */}
           <img 
-            src="/path/to/your/DA.png" // Replace with your actual logo image path
+            src={logoImage} 
             alt="DocuFlow DA MIMAROPA Logo" 
             className="w-11 h-11 rounded-xl object-contain shadow-[0_0_15px_rgba(250,204,21,0.4)] border border-yellow-300" 
           />
