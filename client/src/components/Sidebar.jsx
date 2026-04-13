@@ -1,4 +1,9 @@
+import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
+
+// 1. IMPORT THE LOGO HERE 
+// Note: Ensure DA.png is inside your src/assets/ folder, or adjust the path.
+import DALogo from '../assets/DA.png'; 
 
 export default function Sidebar({ userRole = 'Staff', onLogout }) {
   const location = useLocation();
@@ -20,9 +25,9 @@ export default function Sidebar({ userRole = 'Staff', onLogout }) {
       <div className="h-24 flex items-center px-8 border-b border-gray-100 relative z-10">
         <div className="flex items-center gap-4">
           
-          {/* THE FIX: Directly reference the file in the public folder */}
+          {/* 2. USE THE IMPORTED VARIABLE HERE */}
           <img 
-            src="/DA.png" 
+            src={DALogo} 
             alt="DocuFlow DA MIMAROPA Logo" 
             className="w-11 h-11 rounded-xl object-contain shadow-[0_0_15px_rgba(250,204,21,0.4)] border border-yellow-300 bg-white" 
           />
