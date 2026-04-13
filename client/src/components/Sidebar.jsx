@@ -1,7 +1,4 @@
 import { Link, useLocation } from 'react-router-dom';
-// IMPORTANT: Adjust this path to point to where your image actually is!
-// For example: '../assets/DA.png' or './images/DA.png'
-import logoImage from './public/DA.png'; 
 
 export default function Sidebar({ userRole = 'Staff', onLogout }) {
   const location = useLocation();
@@ -22,12 +19,14 @@ export default function Sidebar({ userRole = 'Staff', onLogout }) {
       {/* BRANDING / LOGO AREA */}
       <div className="h-24 flex items-center px-8 border-b border-gray-100 relative z-10">
         <div className="flex items-center gap-4">
-          {/* Logo image using the imported variable */}
+          
+          {/* THE FIX: Directly reference the file in the public folder */}
           <img 
-            src={logoImage} 
+            src="/DA.png" 
             alt="DocuFlow DA MIMAROPA Logo" 
-            className="w-11 h-11 rounded-xl object-contain shadow-[0_0_15px_rgba(250,204,21,0.4)] border border-yellow-300" 
+            className="w-11 h-11 rounded-xl object-contain shadow-[0_0_15px_rgba(250,204,21,0.4)] border border-yellow-300 bg-white" 
           />
+          
           <div>
             <h1 className="font-black text-gray-900 tracking-tight leading-tight text-xl">DocuFlow</h1>
             <p className="text-[10px] font-bold text-green-700 uppercase tracking-widest">DA MIMAROPA</p>
